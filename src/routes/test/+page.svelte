@@ -18,6 +18,12 @@
 
 {#if form?.success}
 	<div>
-		{form.response}
+		{form.thing}
+	</div>
+{/if}
+
+{#if form?.error}
+	<div>
+		{form.error}
 	</div>
 {/if}
