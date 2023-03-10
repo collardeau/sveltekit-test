@@ -1,7 +1,9 @@
 import { json } from '@sveltejs/kit';
-import gpt from '$lib/openai/chatgpt';
+
+const endpoint = 'https://dummyjson.com/products?limit=3';
 
 export const POST = async ({ request }) => {
-	const stuff = await gpt();
-	return json({ success: true, thing: stuff });
+	const res = await fetch(endpoint);
+	const data = await res.json();
+	return json({ success: true, content: data });
 };
