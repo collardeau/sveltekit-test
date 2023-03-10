@@ -1,7 +1,12 @@
-<nav>
-	<a href="/">Home</a>
-	<a href="/test">Test</a>
-</nav>
+<header>
+	<nav>
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/test">Test</a></li>
+		</ul>
+	</nav>
+</header>
+
 <main>
 	<slot />
 </main>
