@@ -1,4 +1,4 @@
-<header>
+<header class="container">
 	<nav>
 		<ul>
 			<li><a href="/">Home</a></li>
@@ -7,6 +7,6 @@
 	</nav>
 </header>
 
-<main>
+<main class="container">
 	<slot />
 </main>
