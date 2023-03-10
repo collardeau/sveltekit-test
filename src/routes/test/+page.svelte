@@ -1,11 +1,12 @@
 <script>
+	import { enhance } from '$app/forms';
+
 	export let form;
 </script>
 
-<form method="POST" action="?/test">
+<form method="POST" action="?/test" use:enhance>
 	<label for="userText">Your Text</label>
 	<textarea id="userText" name="userText" placeholder="Enter text here..." value="" required />
-
 	<label for="tone">Tone:</label>
 	<select id="tone" name="tone">
 		<option value="Friendly">Friendly</option>
