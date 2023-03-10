@@ -14,7 +14,7 @@
 	};
 </script>
 
-<form method="POST" action="?/test" use:enhance={submit}>
+<form method="POST" action="?/gpt" use:enhance={submit}>
 	<label for="userText">Your Text</label>
 	<textarea id="userText" name="userText" placeholder="Enter text here..." value="" required />
 	<label for="tone">Tone:</label>
@@ -32,7 +32,7 @@
 
 {#if form?.success}
 	<div>
-		{form.thing}
+		{form.content}
 	</div>
 {/if}
 
