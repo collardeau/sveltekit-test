@@ -21,8 +21,10 @@ export const load = async ({ fetch }) => {
 };
 
 export const actions = {
-	test: async (event) => {
+	test: async ({ request }) => {
 		try {
+			// const formData = await request.formData();
+			// const userText = formData.get('userText');
 			// Process form data
 			await new Promise((resolve) => setTimeout(resolve, 500));
 			// throw new Error('Oops, something went wrong in a form action.');

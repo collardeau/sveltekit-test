@@ -1,4 +1,4 @@
-import { json, fail } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import gpt from '$lib/openai/chatgpt';
 
 export const POST = async ({ request }) => {
