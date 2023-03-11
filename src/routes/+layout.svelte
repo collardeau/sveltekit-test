@@ -2,7 +2,8 @@
 	<nav>
 		<ul>
 			<li><a href="/">Home</a></li>
-			<li><a href="/test">Test</a></li>
+			<li><a href="/demo">Demo</a></li>
+			<li><a href="/chat">Chat</a></li>
 		</ul>
 	</nav>
 </header>
