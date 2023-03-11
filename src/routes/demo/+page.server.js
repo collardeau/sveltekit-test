@@ -2,8 +2,8 @@ import { fail } from '@sveltejs/kit';
 
 export const load = async ({ fetch }) => {
 	try {
-		// load some data here
-		await new Promise((resolve) => setTimeout(resolve, 1000));
+		// Load data from API
+		await new Promise((resolve) => setTimeout(resolve, 500));
 		// throw new Error('Something went wrong!');
 		return {
 			posts: [
@@ -12,7 +12,7 @@ export const load = async ({ fetch }) => {
 			]
 		};
 	} catch (error) {
-		console.error(error);
+		console.error('Failed to load data:', error);
 		return {
 			posts: [],
 			error: 'Could not load data'
@@ -23,15 +23,16 @@ export const load = async ({ fetch }) => {
 export const actions = {
 	test: async (event) => {
 		try {
-			// do some processing here
+			// Process form data
 			await new Promise((resolve) => setTimeout(resolve, 500));
-			// throw new Error('Oops, something went wrong!');
+			// throw new Error('Oops, something went wrong in a form action.');
 			return {
 				success: true,
-				message: 'your form was successfully processed'
+				message: `Your form was successfully processed.`
 			};
 		} catch (error) {
-			return fail(500, { success: false, error: error.message });
+			console.error(error.message);
+			return fail(500, { success: false, error: 'Unable to process form' });
 		}
 	}
 };
