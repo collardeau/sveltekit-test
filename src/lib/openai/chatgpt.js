@@ -1,8 +1,16 @@
 import { OPENAI_KEY } from '$env/static/private';
 
-// Define the chat response generator function
-export default async function gpt(chatMessages) {
-	// Check for the OpenAI API key
+const moderate = false; // only applies to last message for now
+
+export default async function gpt(
+	chatMessages = [],
+	options = {
+		model: 'gpt-3.5-turbo',
+		temperature: 0.9
+		// stream: true
+	}
+) {
+	// Check for API key
 	if (!OPENAI_KEY) throw new Error('No API key found.');
 
 	// Convert the input to an array, if necessary
@@ -17,18 +25,58 @@ export default async function gpt(chatMessages) {
 		characterCount += message.content.length;
 	});
 
-	// Calculate tokens from character count
-	const tokens = characterCount / 4; // very cheap tokenizer
+	// Calculate tokens from character count with a very cheap tokenizer
+	const tokens = characterCount / 4;
 
 	// Check tokens against limit
 	const MAX_TOKENS = 2000;
 	if (tokens > MAX_TOKENS) throw new Error('Messages are too long. Please shorten your messages.');
 
-	// TODO: Generate chat response using OpenAI API
-	console.log(userInput);
+	// Moderation check
+	if (moderate) {
+		const lastMsg = userInput[userInput.length - 1].content;
+		const moderationRes = await fetch('https://api.openai.com/v1/moderations', {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${OPENAI_KEY}`
+			},
+			method: 'POST',
+			body: JSON.stringify({
+				input: lastMsg
+			})
+		});
+		const moderationData = await moderationRes.json();
+		const [results] = moderationData.results;
+		// console.log(results);
+		if (results.flagged) {
+			console.warn('flagged: ', results);
+			throw new Error('Query flagged by openai');
+		}
+	}
 
-	// Dummy chat response for testing
+	const opts = {
+		...options,
+		messages: userInput
+	};
+
+	// Generate chat response using OpenAI API
+
+	const chatResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+		headers: {
+			Authorization: `Bearer ${OPENAI_KEY}`,
+			'Content-Type': 'application/json'
+		},
+		method: 'POST',
+		body: JSON.stringify(opts)
+	});
+
+	const responseData = await chatResponse.json();
+
+	if (!chatResponse.ok) {
+		console.error(responseData);
+		throw new Error(responseData);
+	}
 	return {
-		content: 'This is a dummy response.'
+		content: responseData.choices[0].message.content
 	};
 }
