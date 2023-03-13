@@ -1,8 +1,14 @@
 <script>
+	// form data
 	let tone = 'neutral';
-	let content = '';
+	let content = 'What was the closest ever Formula 1 championship?';
+
+	// state
+	let loading = false;
+	let answer = '';
 
 	async function handleSubmit() {
+		loading = true;
 		try {
 			const response = await fetch('/api/gpt', {
 				method: 'POST',
@@ -13,9 +19,12 @@
 			});
 			const data = await response.json();
 			content = '';
+			answer = data.chatResponse.content;
+			loading = false;
 			console.log('Response:', data);
 		} catch (error) {
 			console.error('Error:', error);
+			loading = false;
 		}
 	}
 </script>
@@ -31,3 +40,16 @@
 	</select>
 	<button type="submit">Submit</button>
 </form>
+
+<br />
+
+<section>
+	{#if loading}
+		<div>Loading...</div>
+	{/if}
+	{#if answer}
+		<p>
+			{answer}
+		</p>
+	{/if}
+</section>
