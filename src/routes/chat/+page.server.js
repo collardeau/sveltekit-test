@@ -1,11 +1,9 @@
-import { getMessages, resetMessages, addMessage } from '$lib/db/mock.js';
+import { getItems, reset } from '$lib/db/mock.js';
 
 export const load = async () => {
-	// mock db reset
-	resetMessages();
-	addMessage({ role: 'assistant', content: 'Hello, I am the assistant :)' });
-	// get the messages
-	const messages = await getMessages();
+	const startMsg = 'Hello, I am the assistant.';
+	reset({ role: 'assistant', content: startMsg }); // mock db reset
+	const messages = await getItems();
 	return {
 		messages
 	};

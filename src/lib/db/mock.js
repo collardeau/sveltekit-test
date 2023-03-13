@@ -1,80 +1,108 @@
-let lastId = 1;
+/**
+ * This is a mock database module that provides functions for basic CRUD operations (Create, Read, Update, Delete) on an array of items.
+ *
+ * The module exports the following functions:
+ *
+ * - getItems(timeoutMs = 0): Returns the items array with an optional mock delay.
+ *
+ * - addItem(item, timeoutMs = 0): Adds a new item to the items array with an optional mock delay.
+ *
+ * - deleteItem(id, timeoutMs = 0): Deletes an item from the items array with the specified ID, with an optional mock delay. If the item is not found, the function will return false.
+ *
+ * - updateItem(id, updatedItem, timeoutMs = 0): Updates an item in the items array with the specified ID, with an optional mock delay. If the item is not found, the function will return false.
+ *
+ * - reset(startItems = []): Resets the items array to an array of items. If an array of items is provided as the 'startItems' parameter, those items will be added to the items array. If a single item is provided, it will be converted to an array before being added to the items array.
+ *
+ * The items in the array are objects with an automatically assigned 'id' property. The 'id' starts at 1 and increments by 1 for each new item added to the array.
+ *
+ * The module uses asynchronous functions and the 'await' keyword to simulate delays in database operations.
+ */
 
-let messages = [
-	{
-		id: 1,
-		role: 'assistant',
-		content: 'Hello, how can I assist you today?'
-	}
-	// {
-	// 	id: 2,
-	// 	role: 'user',
-	// 	content: 'I need help with my account, it seems to be locked out.'
-	// },
-	// {
-	// 	id: 3,
-	// 	role: 'assistant',
-	// 	content: 'Sure, I can help you with that. Can you please provide me with your account details?'
-	// },
-];
+let lastId = 0;
+
+let items = [];
 
 /**
- * Returns the messages array.
- * @returns {Array} The messages array.
+ * Returns the items array.
+ * @param {Number} timeoutMs - The number of milliseconds to wait before returning the items array.
+ * @returns {Array} The items array.
  */
-export async function getMessages() {
-	return messages;
+export async function getItems(timeoutMs = 0) {
+	if (timeoutMs) {
+		await new Promise((resolve) => setTimeout(resolve, timeoutMs));
+	}
+	return items;
 }
 
 /**
- * Adds a new message to the messages array.
- * @param {Object} message - The message to add.
- * @returns {Boolean} Returns true if the message was added successfully.
+ * Adds a new item to the items array.
+ * @param {Object} item - The item to add.
+ * @param {Number} timeoutMs - The number of milliseconds to wait before adding the item.
+ * @returns {Boolean} Returns true if the item was added successfully.
  */
-export async function addMessage(message) {
+export async function addItem(item, timeoutMs = 0) {
+	if (timeoutMs) {
+		await new Promise((resolve) => setTimeout(resolve, timeoutMs));
+	}
 	lastId++;
-	message.id = lastId;
-	messages.push(message);
+	item.id = lastId;
+	items.push(item);
 	return true;
 }
 
 /**
- * Deletes a message from the messages array.
- * @param {Number} id - The ID of the message to delete.
- * @returns {Boolean} Returns true if the message was deleted successfully, or false if the message was not found.
+ * Deletes an item from the items array.
+ * @param {Number} id - The ID of the item to delete.
+ * @param {Number} timeoutMs - The number of milliseconds to wait before deleting the item.
+ * @returns {Boolean} Returns true if the item was deleted successfully, or false if the item was not found.
  */
-export async function deleteMessage(id) {
-	const index = messages.findIndex((message) => message.id === id);
-	if (index === -1) {
-		console.log(`Message with ID ${id} not found`);
-		return false;
+export async function deleteItem(id, timeoutMs = 0) {
+	if (timeoutMs) {
+		await new Promise((resolve) => setTimeout(resolve, timeoutMs));
 	}
-	messages.splice(index, 1);
-	return true;
+	const index = items.findIndex((item) => item.id === id);
+	if (index === -1) {
+		console.warn(`Item with ID ${id} not found`);
+		return false;
+	} else {
+		items.splice(index, 1);
+		return true;
+	}
 }
 
 /**
- * Updates a message in the messages array.
- * @param {Number} id - The ID of the message to update.
- * @param {Object} updatedMessage - The updated message object.
- * @returns {Boolean} Returns true if the message was updated successfully, or false if the message was not found.
+ * Updates an item in the items array.
+ * @param {Number} id - The ID of the item to update.
+ * @param {Object} updatedItem - The updated item object.
+ * @param {Number} timeoutMs - The number of milliseconds to wait before updating the item.
+ * @returns {Boolean} Returns true if the item was updated successfully, or false if the item was not found.
  */
-export async function updateMessage(id, updatedMessage) {
-	const index = messages.findIndex((message) => message.id === id);
-	if (index === -1) {
-		console.log(`Message with ID ${id} not found`);
-		return false;
+export async function updateItem(id, updatedItem, timeoutMs = 0) {
+	if (timeoutMs) {
+		await new Promise((resolve) => setTimeout(resolve, timeoutMs));
 	}
-	messages[index] = { ...messages[index], ...updatedMessage };
-	return true;
+	const index = items.findIndex((item) => item.id === id);
+	if (index === -1) {
+		console.warn(`Item with ID ${id} not found`);
+		return false;
+	} else {
+		items[index] = { ...items[index], ...updatedItem };
+		return true;
+	}
 }
 
 /**
- * Resets the messages array to an empty array.
+ * Resets the items array to an array of items.
+ * @param {Object | Array} startItems - An object or array of items to start with.
  * @returns {Boolean} Returns true.
  */
-export function resetMessages() {
-	messages = [];
-	lastId = 0;
+export async function reset(startItems = []) {
+	if (!Array.isArray(startItems)) {
+		startItems = [startItems];
+	}
+	items = [];
+	for (const item of startItems) {
+		await addItem(item);
+	}
 	return true;
 }
