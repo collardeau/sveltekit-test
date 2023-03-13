@@ -5,9 +5,13 @@ const moderate = false; // only applies to last message for now
 export default async function gpt(
 	chatMessages = [],
 	options = {
-		model: 'gpt-3.5-turbo',
-		temperature: 0.9
-		// stream: true
+		model: 'gpt-3.5-turbo'
+		// temperature: 1,
+		// top_p: 1,
+		// n: 1,
+		// stream: false,
+		// max_tokens: 4096
+		// https://platform.openai.com/docs/api-reference/chat/create
 	}
 ) {
 	// Check for API key
@@ -54,12 +58,12 @@ export default async function gpt(
 		}
 	}
 
+	// Generate chat response using OpenAI API
+
 	const opts = {
 		...options,
 		messages: userInput
 	};
-
-	// Generate chat response using OpenAI API
 
 	const chatResponse = await fetch('https://api.openai.com/v1/chat/completions', {
 		headers: {
