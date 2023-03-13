@@ -20,6 +20,14 @@ export default async function gpt(
 	// Convert the input to an array, if necessary
 	let userInput = Array.isArray(chatMessages) ? chatMessages : [chatMessages];
 
+	// Extract only the 'model' and 'content' properties from each message object
+	userInput = userInput.map((message) => {
+		return {
+			model: message.model,
+			content: message.content
+		};
+	});
+
 	// Validate input messages and accumulate character count
 	let characterCount = 0;
 	userInput.forEach((message, index) => {

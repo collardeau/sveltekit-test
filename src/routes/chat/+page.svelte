@@ -1,11 +1,15 @@
 <script>
+	export let data;
+
+	// loaded data
+	let msgs = data.messages || [];
+
+	// ui state
+	let loading = false;
+
 	// form data
 	let tone = 'neutral';
-	let content = 'What was the closest ever Formula 1 championship?';
-
-	// state
-	let loading = false;
-	let answer = '';
+	let content = 'What is the biggest city?';
 
 	async function handleSubmit() {
 		loading = true;
@@ -18,8 +22,9 @@
 				body: JSON.stringify({ tone, content })
 			});
 			const data = await response.json();
+			const answer = data.chatResponse.content;
+			msgs = [...msgs, { role: 'user', content }, { role: 'assistant', content: answer }];
 			content = '';
-			answer = data.chatResponse.content;
 			loading = false;
 			console.log('Response:', data);
 		} catch (error) {
@@ -29,27 +34,41 @@
 	}
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
-	<label for="content">Message:</label>
-	<textarea id="input-text" bind:value={content} />
-	<label for="tone">Tone:</label>
-	<select id="tone" bind:value={tone}>
-		<option value="neutral">Neutral</option>
-		<option value="positive">Positive</option>
-		<option value="negative">Negative</option>
-	</select>
-	<button type="submit">Submit</button>
-</form>
-
-<br />
+<section>
+	{#each msgs as msg}
+		<div class="message">
+			<p>
+				{msg.role === 'assistant' ? 'GPT' : 'You'}: {msg.content}
+			</p>
+		</div>
+	{/each}
+</section>
 
 <section>
-	{#if loading}
-		<div>Loading...</div>
-	{/if}
-	{#if answer}
-		<p>
-			{answer}
-		</p>
-	{/if}
+	<section>
+		{#if loading}
+			<div>Loading...</div>
+		{/if}
+	</section>
+	<form on:submit|preventDefault={handleSubmit}>
+		<label for="content">Your Message:</label>
+		<textarea id="input-text" bind:value={content} />
+		<!-- <label for="tone">Tone:</label>
+		<select id="tone" bind:value={tone}>
+			<option value="neutral">Neutral</option>
+			<option value="positive">Positive</option>
+			<option value="negative">Negative</option>
+		</select> -->
+		<button type="submit">Submit</button>
+	</form>
 </section>
+
+<style>
+	.message {
+		margin: 1rem 0;
+	}
+
+	.message p {
+		margin: 0;
+	}
+</style>
