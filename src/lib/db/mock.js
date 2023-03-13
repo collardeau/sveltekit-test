@@ -13,7 +13,7 @@
  *
  * - reset(startItems = []): Resets the items array to an array of items. If an array of items is provided as the 'startItems' parameter, those items will be added to the items array. If a single item is provided, it will be converted to an array before being added to the items array.
  *
- * The items in the array are objects with an automatically assigned 'id' property. The 'id' starts at 1 and increments by 1 for each new item added to the array.
+ * The items in the array are objects with an automatically assigned 'id' property.
  *
  * The module uses asynchronous functions and the 'await' keyword to simulate delays in database operations.
  */
@@ -44,9 +44,8 @@ export async function addItem(item, timeoutMs = 0) {
 	if (timeoutMs) {
 		await new Promise((resolve) => setTimeout(resolve, timeoutMs));
 	}
-	lastId++;
-	item.id = lastId;
-	items.push(item);
+	const newItem = { ...item, id: generateRandomString(10) };
+	items.push(newItem);
 	return true;
 }
 
@@ -105,4 +104,13 @@ export async function reset(startItems = []) {
 		await addItem(item);
 	}
 	return true;
+}
+
+function generateRandomString(length) {
+	let result = '';
+	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (let i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * characters.length));
+	}
+	return result;
 }
