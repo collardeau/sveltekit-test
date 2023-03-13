@@ -13,6 +13,20 @@
 			loading = false;
 		};
 	};
+
+	// test out snapshot
+	// works with back/forward browser buttons (not with links?)
+	let userText = '';
+	export const snapshot = {
+		capture: () => {
+			return {
+				userText
+			};
+		},
+		restore: (obj) => {
+			userText = obj.userText;
+		}
+	};
 </script>
 
 <section>
@@ -33,7 +47,13 @@
 	<h2>Form Post Request</h2>
 	<form method="POST" action="?/test" use:enhance={submit}>
 		<label for="userText">Your Text</label>
-		<textarea id="userText" name="userText" placeholder="Enter text here..." value="" required />
+		<textarea
+			id="userText"
+			name="userText"
+			placeholder="Enter text here..."
+			bind:value={userText}
+			required
+		/>
 		<button type="submit">Submit</button>
 	</form>
 	{#if loading}
